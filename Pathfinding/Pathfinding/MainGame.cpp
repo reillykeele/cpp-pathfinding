@@ -1,16 +1,10 @@
 #include "MainGame.h"
+#include "Errors.h"
 
 #include <iostream>
 #include <string>
 
-void fatalError(std::string errMsg)
-{
-	std::cout << errMsg << std::endl;
-
-	SDL_Quit();
-}
-
-MainGame::MainGame()
+MainGame::MainGame() : _window(nullptr)
 {
 	_window = nullptr;
 
@@ -49,6 +43,15 @@ void MainGame::initSystems()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	initShaders();
+}
+
+void MainGame::initShaders()
+{
+	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
+	_colorProgram.addAttribute("vertexPosition");
+	_colorProgram.linkShaders();
 }
 
 void MainGame::gameLoop()
@@ -83,7 +86,9 @@ void MainGame::drawGame()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	_colorProgram.use();
 	_sprite.draw();
+	_colorProgram.unuse();
 
 	SDL_GL_SwapWindow(_window);
 }

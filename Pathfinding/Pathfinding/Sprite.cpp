@@ -1,8 +1,8 @@
 #include "Sprite.h"
 
-Sprite::Sprite()
+Sprite::Sprite() : _vboID(0)
 {
-	_vboID = 0;
+	
 }
 
 Sprite::~Sprite()
