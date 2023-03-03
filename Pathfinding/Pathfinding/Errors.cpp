@@ -8,4 +8,5 @@ void fatalError(std::string errMsg)
 	std::cout << errMsg << std::endl;
 
 	SDL_Quit();
+	exit(1);
 }
