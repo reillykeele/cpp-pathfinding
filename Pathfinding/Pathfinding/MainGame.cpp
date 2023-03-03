@@ -4,14 +4,14 @@
 #include <iostream>
 #include <string>
 
-MainGame::MainGame() : _window(nullptr)
+MainGame::MainGame() :
+	_window(nullptr),
+	_screenWidth(600),
+	_screenHeight(400),
+	_gameState(GameState::PLAY),
+	_time(0)
 {
-	_window = nullptr;
-
-	_screenWidth = 600;
-	_screenHeight = 400;
-
-	_gameState = GameState::PLAY;
+	
 }
 
 MainGame::~MainGame() = default;
@@ -19,6 +19,8 @@ MainGame::~MainGame() = default;
 void MainGame::run()
 {
 	initSystems();
+
+	_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
 
 	gameLoop();
 }
@@ -61,7 +63,7 @@ void MainGame::gameLoop()
 	{
 		processInput();
 
-		_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
+		_time += 0.01f;
 
 		drawGame();
 	}
@@ -88,7 +90,12 @@ void MainGame::drawGame()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	_colorProgram.use();
+
+	const auto timeLocation = _colorProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, _time);
+
 	_sprite.draw();
+
 	_colorProgram.unuse();
 
 	SDL_GL_SwapWindow(_window);
