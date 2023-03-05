@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pathfinding", "Pathfinding\Pathfinding.vcxproj", "{47B52B57-60F4-4B9E-89DC-85B3B9B37C9B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{17A77E9D-AA17-4976-98A4-616995DAF208} = {17A77E9D-AA17-4976-98A4-616995DAF208}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDLEngine", "SDLEngine\SDLEngine.vcxproj", "{17A77E9D-AA17-4976-98A4-616995DAF208}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,14 @@ Global
 		{47B52B57-60F4-4B9E-89DC-85B3B9B37C9B}.Release|x64.Build.0 = Release|x64
 		{47B52B57-60F4-4B9E-89DC-85B3B9B37C9B}.Release|x86.ActiveCfg = Release|Win32
 		{47B52B57-60F4-4B9E-89DC-85B3B9B37C9B}.Release|x86.Build.0 = Release|Win32
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Debug|x64.ActiveCfg = Debug|x64
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Debug|x64.Build.0 = Debug|x64
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Debug|x86.ActiveCfg = Debug|Win32
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Debug|x86.Build.0 = Debug|Win32
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Release|x64.ActiveCfg = Release|x64
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Release|x64.Build.0 = Release|x64
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Release|x86.ActiveCfg = Release|Win32
+		{17A77E9D-AA17-4976-98A4-616995DAF208}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
