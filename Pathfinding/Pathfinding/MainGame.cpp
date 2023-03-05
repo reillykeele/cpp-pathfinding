@@ -20,7 +20,14 @@ void MainGame::run()
 {
 	initSystems();
 
-	_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
+	_sprites.push_back(new Sprite());
+	_sprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
+
+	_sprites.push_back(new Sprite());
+	_sprites.back()->init(0.0f, 0.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
+
+
+	// _sprite.init(-1.0f, -1.0f, 2.0f, 2.0f, "Textures/cat-pack/cat-icon.png");
 
 	gameLoop();
 }
@@ -54,6 +61,7 @@ void MainGame::initShaders()
 	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
 	_colorProgram.addAttribute("vertPosition");
 	_colorProgram.addAttribute("vertColor");
+	_colorProgram.addAttribute("vertUV");
 	_colorProgram.linkShaders();
 }
 
@@ -91,10 +99,20 @@ void MainGame::drawGame()
 
 	_colorProgram.use();
 
+	glActiveTexture(GL_TEXTURE0);
+
+	const auto textureLocation = _colorProgram.getUniformLocation("sampler");
+	glUniform1i(textureLocation, 0);
+
 	const auto timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time);
 
-	_sprite.draw();
+	for (int i = 0; i < _sprites.size(); i++)
+	{
+		_sprites[i]->draw();
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	_colorProgram.unuse();
 

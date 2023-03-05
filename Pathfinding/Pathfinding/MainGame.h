@@ -1,9 +1,11 @@
 #pragma once
 
+#include <vector>
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
 #include "GLSLProgram.h"
+#include "GLTexture.h"
 #include "Sprite.h"
 
 enum class GameState { PLAY, EXIT };
@@ -30,7 +32,8 @@ private:
 
 	GameState _gameState;
 
-	Sprite _sprite;
+	std::vector<Sprite*> _sprites;
+	// Sprite _sprite;
 
 	GLSLProgram _colorProgram;
 
