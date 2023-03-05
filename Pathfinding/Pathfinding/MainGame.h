@@ -24,6 +24,7 @@ private:
 	void gameLoop();
 	void processInput();
 	void drawGame();
+	void calculateFPS();
 
 	SDL_Window* _window;
 
@@ -36,6 +37,10 @@ private:
 	// Sprite _sprite;
 
 	GLSLProgram _colorProgram;
+
+	float _fps;
+	float _maxFPS;
+	float _frameTime;
 
 	float _time;
 };

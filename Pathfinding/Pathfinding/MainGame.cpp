@@ -9,9 +9,11 @@ MainGame::MainGame() :
 	_screenWidth(600),
 	_screenHeight(400),
 	_gameState(GameState::PLAY),
+	_fps(0),
+	_maxFPS(60.0f),
+	_frameTime(0),
 	_time(0)
 {
-	
 }
 
 MainGame::~MainGame() = default;
@@ -26,15 +28,14 @@ void MainGame::run()
 	_sprites.push_back(new Sprite());
 	_sprites.back()->init(0.0f, 0.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
 
-
-	// _sprite.init(-1.0f, -1.0f, 2.0f, 2.0f, "Textures/cat-pack/cat-icon.png");
-
 	gameLoop();
 }
 
 void MainGame::initSystems()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	_window = SDL_CreateWindow("Pathfinding", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
 
@@ -49,9 +50,12 @@ void MainGame::initSystems()
 	if (glewErr != GLEW_OK)
 		fatalError("Failed to initialize GLEW.");
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	std::printf("*** OpenGL Version: %s ***\n", glGetString(GL_VERSION));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Set VSYNC
+	SDL_GL_SetSwapInterval(0);
 
 	initShaders();
 }
@@ -69,11 +73,29 @@ void MainGame::gameLoop()
 {
 	while(_gameState != GameState::EXIT)
 	{
+		float startTicks = SDL_GetTicks64();
+
 		processInput();
 
 		_time += 0.01f;
 
 		drawGame();
+
+		calculateFPS();
+		static int frameCounter = 0;
+		frameCounter++;
+		if (frameCounter == 10)
+		{
+			std::cout << _fps << std::endl;
+			frameCounter = 0;
+		}
+
+		float frameTicks = SDL_GetTicks64() - startTicks;
+		if (1000.0f / _maxFPS > frameTicks)
+		{
+			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		}
+
 	}
 }
 
@@ -117,4 +139,37 @@ void MainGame::drawGame()
 	_colorProgram.unuse();
 
 	SDL_GL_SwapWindow(_window);
+}
+
+void MainGame::calculateFPS()
+{
+	static const int NUM_SAMPLES = 10;
+	static float frameTimes[NUM_SAMPLES];
+	static int currFrame = 0;
+
+	static float prevTicks = SDL_GetTicks64();
+
+	float currTicks;
+	currTicks = SDL_GetTicks64();
+
+	_frameTime = currTicks - prevTicks;
+	frameTimes[currFrame % NUM_SAMPLES] = _frameTime;
+
+	prevTicks = currTicks;
+
+	currFrame++;
+	int count = std::min(currFrame, NUM_SAMPLES);
+
+	float frameTimeAverage = 0;
+	for (int i = 0; i < count; i++)
+		frameTimeAverage += frameTimes[i];
+
+	frameTimeAverage /= count;
+
+	if (frameTimeAverage > 0)
+		_fps = 1000.0f / frameTimeAverage;
+	else
+		_fps = 60.0f;
+
+	
 }
