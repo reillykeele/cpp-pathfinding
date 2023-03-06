@@ -5,6 +5,7 @@
 #include <SDLEngine/GLSLProgram.h>
 #include <SDLEngine/Window.h>
 
+#include "SDLEngine/Camera2D.h"
 #include "SDLEngine/Sprite.h"
 
 enum class GameState { PLAY, EXIT };
@@ -36,6 +37,8 @@ private:
 	// Sprite _sprite;
 
 	SDLEngine::GLSLProgram _colorProgram;
+
+	SDLEngine::Camera2D _camera;
 
 	float _fps;
 	float _maxFPS;

@@ -14,6 +14,7 @@ MainGame::MainGame() :
 	_frameTime(0),
 	_time(0)
 {
+	_camera.init(_screenWidth, _screenHeight);
 }
 
 MainGame::~MainGame() = default;
@@ -23,10 +24,10 @@ void MainGame::run()
 	initSystems();
 
 	_sprites.push_back(new SDLEngine::Sprite());
-	_sprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
+	_sprites.back()->init(0.0f, 0.0f, _screenWidth / 2, _screenHeight / 2, "Textures/cat-pack/cat-icon.png");
 
 	_sprites.push_back(new SDLEngine::Sprite());
-	_sprites.back()->init(0.0f, 0.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
+	_sprites.back()->init(_screenWidth / 2, 0.0f, _screenWidth / 2, _screenHeight / 2, "Textures/cat-pack/cat-icon.png");
 
 	gameLoop();
 }
@@ -59,6 +60,8 @@ void MainGame::gameLoop()
 
 		_time += 0.01f;
 
+		_camera.update();
+
 		drawGame();
 
 		calculateFPS();
@@ -83,12 +86,39 @@ void MainGame::processInput()
 {
 	SDL_Event ev;
 
+	static const float CAMERA_SPEED = 20.0f;
+	static const float SCALE_SPEED = 0.1f;
+
 	while(SDL_PollEvent(&ev))
 	{
 		switch(ev.type)
 		{
 			case SDL_QUIT: 
 				_gameState = GameState::EXIT;
+				break;
+
+			case SDL_KEYDOWN:
+				switch (ev.key.keysym.sym)
+				{
+					case SDLK_w:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+						break;
+					case SDLK_s:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+						break;
+					case SDLK_d:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+						break;
+					case SDLK_a:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+						break;
+					case SDLK_e:
+						_camera.setScale(_camera.getScale() + SCALE_SPEED);
+						break;
+					case SDLK_q:
+						_camera.setScale(_camera.getScale() - SCALE_SPEED);
+						break;
+				}
 				break;
 		}
 	}
@@ -108,6 +138,11 @@ void MainGame::drawGame()
 
 	const auto timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time);
+
+	// Set the camera matrix
+	const auto pLocation = _colorProgram.getUniformLocation("P");
+	auto cameraMatrix = _camera.getCameraMatrix();
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	for (int i = 0; i < _sprites.size(); i++)
 	{
