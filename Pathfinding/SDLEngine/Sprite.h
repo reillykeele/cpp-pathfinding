@@ -5,25 +5,29 @@
 
 #include "GLTexture.h"
 
-class Sprite
+namespace SDLEngine
 {
-public:
-	Sprite();
-	~Sprite();
 
-	void init(float x, float y, float width, float height, std::string texturePath);
+	class Sprite
+	{
+	public:
+		Sprite();
+		~Sprite();
 
-	void draw();
+		void init(float x, float y, float width, float height, std::string texturePath);
 
-private:
-	int _x;
-	int _y;
+		void draw();
 
-	float _width;
-	float _height;
+	private:
+		int _x;
+		int _y;
 
-	GLuint _vboID;
+		float _width;
+		float _height;
 
-	GLTexture _texture;
-};
+		GLuint _vboID;
 
+		GLTexture _texture;
+	};
+
+}

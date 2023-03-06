@@ -3,9 +3,12 @@
 #include <string>
 #include <vector>
 
-static class IOManager
+namespace SDLEngine
 {
-public:
-	static bool readFileToBuffer(const std::string filePath, std::vector<unsigned char>& buffer);
-};
+	static class IOManager
+	{
+	public:
+		static bool readFileToBuffer(const std::string filePath, std::vector<unsigned char>& buffer);
+	};
 
+}

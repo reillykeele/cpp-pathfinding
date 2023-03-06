@@ -1,12 +1,11 @@
 #pragma once
 
 #include <vector>
-#include <SDL/SDL.h>
-#include <GL/glew.h>
 
-#include "GLSLProgram.h"
-#include "GLTexture.h"
-#include "Sprite.h"
+#include <SDLEngine/GLSLProgram.h>
+#include <SDLEngine/Window.h>
+
+#include "SDLEngine/Sprite.h"
 
 enum class GameState { PLAY, EXIT };
 
@@ -26,17 +25,17 @@ private:
 	void drawGame();
 	void calculateFPS();
 
-	SDL_Window* _window;
+	SDLEngine::Window _window;
 
 	int _screenWidth;
 	int _screenHeight;
 
 	GameState _gameState;
 
-	std::vector<Sprite*> _sprites;
+	std::vector<SDLEngine::Sprite*> _sprites;
 	// Sprite _sprite;
 
-	GLSLProgram _colorProgram;
+	SDLEngine::GLSLProgram _colorProgram;
 
 	float _fps;
 	float _maxFPS;

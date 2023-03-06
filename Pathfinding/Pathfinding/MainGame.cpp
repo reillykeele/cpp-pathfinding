@@ -1,11 +1,11 @@
 #include "MainGame.h"
-#include "Errors.h"
 
 #include <iostream>
-#include <string>
+
+#include <SDLEngine/Sprite.h>
+#include "SDLEngine/SDLEngine.h"
 
 MainGame::MainGame() :
-	_window(nullptr),
 	_screenWidth(600),
 	_screenHeight(400),
 	_gameState(GameState::PLAY),
@@ -22,10 +22,10 @@ void MainGame::run()
 {
 	initSystems();
 
-	_sprites.push_back(new Sprite());
+	_sprites.push_back(new SDLEngine::Sprite());
 	_sprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
 
-	_sprites.push_back(new Sprite());
+	_sprites.push_back(new SDLEngine::Sprite());
 	_sprites.back()->init(0.0f, 0.0f, 1.0f, 1.0f, "Textures/cat-pack/cat-icon.png");
 
 	gameLoop();
@@ -33,29 +33,9 @@ void MainGame::run()
 
 void MainGame::initSystems()
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
+	SDLEngine::init();
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-	_window = SDL_CreateWindow("Pathfinding", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
-
-	if(_window == nullptr)
-		fatalError("Failed to create SDL window.");
-
-	auto glContext = SDL_GL_CreateContext(_window);
-	if(glContext == nullptr)
-		fatalError("Failed to create GL context.");
-
-	auto glewErr = glewInit();
-	if (glewErr != GLEW_OK)
-		fatalError("Failed to initialize GLEW.");
-
-	std::printf("*** OpenGL Version: %s ***\n", glGetString(GL_VERSION));
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Set VSYNC
-	SDL_GL_SetSwapInterval(0);
+	_window.create("Pathfinding", _screenWidth, _screenHeight, 0);
 
 	initShaders();
 }
@@ -138,7 +118,7 @@ void MainGame::drawGame()
 
 	_colorProgram.unuse();
 
-	SDL_GL_SwapWindow(_window);
+	_window.swap();
 }
 
 void MainGame::calculateFPS()

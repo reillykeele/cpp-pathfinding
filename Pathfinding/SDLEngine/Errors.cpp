@@ -2,11 +2,15 @@
 
 #include <iostream>
 #include <SDL/SDL.h>
-
-void fatalError(std::string errMsg)
+namespace SDLEngine
 {
-	std::cout << errMsg << std::endl;
 
-	SDL_Quit();
-	exit(1);
+	void fatalError(std::string errMsg)
+	{
+		std::cout << errMsg << std::endl;
+
+		SDL_Quit();
+		exit(1);
+	}
+
 }
