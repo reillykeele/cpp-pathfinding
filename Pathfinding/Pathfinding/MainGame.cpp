@@ -3,6 +3,8 @@
 #include <iostream>
 
 #include <SDLEngine/Sprite.h>
+
+#include "SDLEngine/ResourceManager.h"
 #include "SDLEngine/SDLEngine.h"
 
 MainGame::MainGame() :
@@ -23,12 +25,6 @@ void MainGame::run()
 {
 	initSystems();
 
-	_sprites.push_back(new SDLEngine::Sprite());
-	_sprites.back()->init(0.0f, 0.0f, _screenWidth / 2, _screenHeight / 2, "Textures/cat-pack/cat-icon.png");
-
-	_sprites.push_back(new SDLEngine::Sprite());
-	_sprites.back()->init(_screenWidth / 2, 0.0f, _screenWidth / 2, _screenHeight / 2, "Textures/cat-pack/cat-icon.png");
-
 	gameLoop();
 }
 
@@ -39,6 +35,8 @@ void MainGame::initSystems()
 	_window.create("Pathfinding", _screenWidth, _screenHeight, 0);
 
 	initShaders();
+
+	_spriteBatch.init();
 }
 
 void MainGame::initShaders()
@@ -144,10 +142,18 @@ void MainGame::drawGame()
 	auto cameraMatrix = _camera.getCameraMatrix();
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
-	for (int i = 0; i < _sprites.size(); i++)
-	{
-		_sprites[i]->draw();
-	}
+	_spriteBatch.begin();
+
+	glm::vec4 pos(0.0f, 0.0f, 100.0f, 100.0f);
+	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
+	auto texture = SDLEngine::ResourceManager::getTexture("Textures/cat-pack/cat-icon.png");
+	SDLEngine::Color color { color.r = 255, color.g = 255, color.b = 255, color.a = 255 };
+
+	_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
+
+	_spriteBatch.end();
+
+	_spriteBatch.renderBatch();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

@@ -9,7 +9,6 @@ namespace SDLEngine
 
 	GLSLProgram::GLSLProgram() : _numAttributes(0), _programID(0), _vertShaderID(0), _fragShaderID(0)
 	{
-
 	}
 
 	GLSLProgram::~GLSLProgram()

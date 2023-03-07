@@ -58,11 +58,11 @@ namespace SDLEngine
 
 		for (int i = 0; i < 6; i++)
 		{
-			vertexData[i].setColor(255, 0, 255, 255);
+			vertexData[i].setColor(255, 255, 255, 255);
 		}
 
-		vertexData[1].setColor(0, 0, 255, 255);
-		vertexData[4].setColor(0, 255, 0, 255);
+		// vertexData[1].setColor(255, 255, 255, 255);
+		// vertexData[1].setColor(255, 0, 0, 255);
 
 		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);

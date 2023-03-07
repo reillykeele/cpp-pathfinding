@@ -30,6 +30,13 @@ namespace SDLEngine
 	class RenderBatch
 	{
 	public:
+		RenderBatch(GLuint offset, GLuint numVertices, GLuint texture):
+			offset(offset),
+			numVertices(numVertices),
+			texture(texture)
+		{
+		}
+
 		GLuint offset;
 		GLuint numVertices;
 		GLuint texture;

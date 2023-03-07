@@ -7,6 +7,7 @@
 
 #include "SDLEngine/Camera2D.h"
 #include "SDLEngine/Sprite.h"
+#include "SDLEngine/SpriteBatch.h"
 
 enum class GameState { PLAY, EXIT };
 
@@ -33,12 +34,11 @@ private:
 
 	GameState _gameState;
 
-	std::vector<SDLEngine::Sprite*> _sprites;
-	// Sprite _sprite;
-
 	SDLEngine::GLSLProgram _colorProgram;
 
 	SDLEngine::Camera2D _camera;
+
+	SDLEngine::SpriteBatch _spriteBatch;
 
 	float _fps;
 	float _maxFPS;
