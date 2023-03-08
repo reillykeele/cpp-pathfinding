@@ -13,7 +13,6 @@ MainGame::MainGame() :
 	_gameState(GameState::PLAY),
 	_fps(0),
 	_maxFPS(60.0f),
-	_frameTime(0),
 	_time(0)
 {
 	_camera.init(_screenWidth, _screenHeight);
@@ -36,6 +35,7 @@ void MainGame::initSystems()
 
 	initShaders();
 
+	_fpsLimiter.init(_maxFPS);
 	_spriteBatch.init();
 }
 
@@ -52,7 +52,7 @@ void MainGame::gameLoop()
 {
 	while(_gameState != GameState::EXIT)
 	{
-		float startTicks = SDL_GetTicks64();
+		_fpsLimiter.begin();
 
 		processInput();
 
@@ -62,19 +62,15 @@ void MainGame::gameLoop()
 
 		drawGame();
 
-		calculateFPS();
+		_fps = _fpsLimiter.end();
+
+		// Print the FPS every 10 frames.
 		static int frameCounter = 0;
 		frameCounter++;
-		if (frameCounter == 10)
+		if (frameCounter == 1000)
 		{
 			std::cout << _fps << std::endl;
 			frameCounter = 0;
-		}
-
-		float frameTicks = SDL_GetTicks64() - startTicks;
-		if (1000.0f / _maxFPS > frameTicks)
-		{
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
 		}
 
 	}
@@ -84,7 +80,7 @@ void MainGame::processInput()
 {
 	SDL_Event ev;
 
-	static const float CAMERA_SPEED = 20.0f;
+	static const float CAMERA_SPEED = 2.0f;
 	static const float SCALE_SPEED = 0.1f;
 
 	while(SDL_PollEvent(&ev))
@@ -96,30 +92,48 @@ void MainGame::processInput()
 				break;
 
 			case SDL_KEYDOWN:
-				switch (ev.key.keysym.sym)
-				{
-					case SDLK_w:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
-						break;
-					case SDLK_s:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
-						break;
-					case SDLK_d:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
-						break;
-					case SDLK_a:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
-						break;
-					case SDLK_e:
-						_camera.setScale(_camera.getScale() + SCALE_SPEED);
-						break;
-					case SDLK_q:
-						_camera.setScale(_camera.getScale() - SCALE_SPEED);
-						break;
-				}
+				_inputManager.pressKey(ev.key.keysym.sym);
+				break;
+			case SDL_KEYUP:
+				_inputManager.releaseKey(ev.key.keysym.sym);
+				break;
+
+			case SDL_MOUSEMOTION:
+				_inputManager.setMouseCoords(ev.motion.x, ev.motion.y);
+			case SDL_MOUSEBUTTONDOWN:
+				_inputManager.pressKey(ev.button.button);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				_inputManager.releaseKey(ev.button.button);
 				break;
 		}
 	}
+	
+	if (_inputManager.isKeyPressed(SDLK_w))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+
+	if (_inputManager.isKeyPressed(SDLK_s))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+
+	if (_inputManager.isKeyPressed(SDLK_d))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+
+	if (_inputManager.isKeyPressed(SDLK_a))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+
+	if (_inputManager.isKeyPressed(SDLK_e))
+		_camera.setScale(_camera.getScale() + SCALE_SPEED);
+
+	if (_inputManager.isKeyPressed(SDLK_q))
+		_camera.setScale(_camera.getScale() - SCALE_SPEED);
+
+	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	{
+		auto mouseCoords = _inputManager.getMouseCoords();
+		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
+	}
+
 }
 
 void MainGame::drawGame()
@@ -133,9 +147,6 @@ void MainGame::drawGame()
 
 	const auto textureLocation = _colorProgram.getUniformLocation("sampler");
 	glUniform1i(textureLocation, 0);
-
-	const auto timeLocation = _colorProgram.getUniformLocation("time");
-	glUniform1f(timeLocation, _time);
 
 	// Set the camera matrix
 	const auto pLocation = _colorProgram.getUniformLocation("P");
@@ -160,37 +171,4 @@ void MainGame::drawGame()
 	_colorProgram.unuse();
 
 	_window.swap();
-}
-
-void MainGame::calculateFPS()
-{
-	static const int NUM_SAMPLES = 10;
-	static float frameTimes[NUM_SAMPLES];
-	static int currFrame = 0;
-
-	static float prevTicks = SDL_GetTicks64();
-
-	float currTicks;
-	currTicks = SDL_GetTicks64();
-
-	_frameTime = currTicks - prevTicks;
-	frameTimes[currFrame % NUM_SAMPLES] = _frameTime;
-
-	prevTicks = currTicks;
-
-	currFrame++;
-	int count = std::min(currFrame, NUM_SAMPLES);
-
-	float frameTimeAverage = 0;
-	for (int i = 0; i < count; i++)
-		frameTimeAverage += frameTimes[i];
-
-	frameTimeAverage /= count;
-
-	if (frameTimeAverage > 0)
-		_fps = 1000.0f / frameTimeAverage;
-	else
-		_fps = 60.0f;
-
-	
 }

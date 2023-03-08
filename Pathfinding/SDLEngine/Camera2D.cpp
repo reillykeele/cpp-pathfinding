@@ -40,6 +40,20 @@ namespace SDLEngine
 		}
 	}
 
+	glm::vec2 Camera2D::convertScreenToWorld(glm::vec2 screenCoords) const
+	{
+		// center
+		screenCoords -= glm::vec2(_screenWidth / 2, _screenHeight / 2);
+
+		// scale
+		screenCoords /= _scale;
+
+		// translate
+		screenCoords += _position;
+
+		return screenCoords;
+	}
+
 	void Camera2D::setScale(const float newScale)
 	{
 		_scale = newScale;

@@ -16,6 +16,8 @@ namespace SDLEngine
 
 		void update();
 
+		glm::vec2 convertScreenToWorld(glm::vec2 screenCoords) const;
+
 		float getScale() const { return _scale; }
 		void setScale(const float newScale);
 

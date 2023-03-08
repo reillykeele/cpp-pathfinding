@@ -67,7 +67,7 @@ namespace SDLEngine
 		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color);
 
 		/**
-		 * \brief Draw the batch to the screen. Called at the end.
+		 * \brief Draw the batch to the screen. Called at after end().
 		 */
 		void renderBatch();
 

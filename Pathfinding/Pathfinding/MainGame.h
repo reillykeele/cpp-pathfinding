@@ -6,8 +6,10 @@
 #include <SDLEngine/Window.h>
 
 #include "SDLEngine/Camera2D.h"
+#include "SDLEngine/InputManager.h"
 #include "SDLEngine/Sprite.h"
 #include "SDLEngine/SpriteBatch.h"
+#include "SDLEngine/Timing.h"
 
 enum class GameState { PLAY, EXIT };
 
@@ -25,8 +27,8 @@ private:
 	void gameLoop();
 	void processInput();
 	void drawGame();
-	void calculateFPS();
 
+	SDLEngine::FPSLimiter _fpsLimiter;
 	SDLEngine::Window _window;
 
 	int _screenWidth;
@@ -40,9 +42,10 @@ private:
 
 	SDLEngine::SpriteBatch _spriteBatch;
 
+	SDLEngine::InputManager _inputManager;
+
 	float _fps;
 	float _maxFPS;
-	float _frameTime;
 
 	float _time;
 };
