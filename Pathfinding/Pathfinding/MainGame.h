@@ -1,15 +1,11 @@
 #pragma once
 
-#include <vector>
-
+#include <SDLEngine/Camera2D.h>
 #include <SDLEngine/GLSLProgram.h>
+#include <SDLEngine/InputManager.h>
+#include <SDLEngine/SpriteBatch.h>
+#include <SDLEngine/Timing.h>
 #include <SDLEngine/Window.h>
-
-#include "SDLEngine/Camera2D.h"
-#include "SDLEngine/InputManager.h"
-#include "SDLEngine/Sprite.h"
-#include "SDLEngine/SpriteBatch.h"
-#include "SDLEngine/Timing.h"
 
 enum class GameState { PLAY, EXIT };
 
@@ -26,6 +22,7 @@ private:
 	void initShaders();
 	void gameLoop();
 	void processInput();
+	void update(const float deltaTime);
 	void drawGame();
 
 	SDLEngine::FPSLimiter _fpsLimiter;
