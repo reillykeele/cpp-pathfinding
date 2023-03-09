@@ -7,11 +7,18 @@ namespace SDLEngine
 
 	struct Position
 	{
+		Position() : x(0), y(0) { }
+		Position(float x, float y) : x(x), y(y) { }
+
 		float x;
 		float y;
 	};
 
-	struct Color {
+	struct ColorRGBA8
+	{
+		ColorRGBA8() : r(0), g(0), b(0), a(0) { }
+		ColorRGBA8(GLbyte r, GLbyte g, GLbyte b, GLbyte a) : r(r), g(g), b(b), a(a) { }
+
 		GLbyte r;
 		GLbyte g;
 		GLbyte b;
@@ -20,6 +27,9 @@ namespace SDLEngine
 
 	struct UV
 	{
+		UV() : u(0), v(0) { }
+		UV(float u, float v) : u(u), v(v) { }
+
 		float u;
 		float v;
 	};
@@ -28,7 +38,7 @@ namespace SDLEngine
 	{
 		Position position;
 
-		Color color;
+		ColorRGBA8 color;
 
 		UV uv;
 

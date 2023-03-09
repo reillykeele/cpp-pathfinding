@@ -64,7 +64,7 @@ namespace SDLEngine
 		/**
 		 * \brief Adds to the batch. Called in-between begin() and end().
 		 */
-		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color);
+		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color);
 
 		/**
 		 * \brief Draw the batch to the screen. Called at after end().

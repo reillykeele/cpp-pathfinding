@@ -109,25 +109,25 @@ void MainGame::processInput()
 		}
 	}
 	
-	if (_inputManager.isKeyPressed(SDLK_w))
+	if (_inputManager.isKeyDown(SDLK_w))
 		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
 
-	if (_inputManager.isKeyPressed(SDLK_s))
+	if (_inputManager.isKeyDown(SDLK_s))
 		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
 
-	if (_inputManager.isKeyPressed(SDLK_d))
+	if (_inputManager.isKeyDown(SDLK_d))
 		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 
-	if (_inputManager.isKeyPressed(SDLK_a))
+	if (_inputManager.isKeyDown(SDLK_a))
 		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
 
-	if (_inputManager.isKeyPressed(SDLK_e))
+	if (_inputManager.isKeyDown(SDLK_e))
 		_camera.setScale(_camera.getScale() + SCALE_SPEED);
 
-	if (_inputManager.isKeyPressed(SDLK_q))
+	if (_inputManager.isKeyDown(SDLK_q))
 		_camera.setScale(_camera.getScale() - SCALE_SPEED);
 
-	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	if (_inputManager.isKeyDown(SDL_BUTTON_LEFT))
 	{
 		auto mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
@@ -158,7 +158,7 @@ void MainGame::drawGame()
 	glm::vec4 pos(0.0f, 0.0f, 100.0f, 100.0f);
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 	auto texture = SDLEngine::ResourceManager::getTexture("Textures/cat-pack/cat-icon.png");
-	SDLEngine::Color color { color.r = 255, color.g = 255, color.b = 255, color.a = 255 };
+	SDLEngine::ColorRGBA8 color { color.r = 255, color.g = 255, color.b = 255, color.a = 255 };
 
 	_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
 
