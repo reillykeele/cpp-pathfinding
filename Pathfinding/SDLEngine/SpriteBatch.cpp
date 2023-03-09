@@ -20,43 +20,24 @@ namespace SDLEngine
 	void SpriteBatch::begin(GlyphSortType sortType /* GlyphSortType::TEXTURE */)
 	{
 		_sortType = sortType;
-
-		for (auto& glyph : _glyphs)
-			delete glyph;
-
+		
 		_renderBatches.clear();
 		_glyphs.clear();
 	} 
 
 	void SpriteBatch::end()
 	{
+		_glyphPointers.resize(_glyphs.size());
+		for (int i = 0; i < _glyphPointers.size(); i++)
+			_glyphPointers[i] = &_glyphs[i];
+
 		sortGlyphs();
 		createRenderBatches();
 	}
 
 	void SpriteBatch::draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color)
 	{
-		Glyph* newGlyph = new Glyph;
-		newGlyph->texture = texture;
-		newGlyph->depth = depth;
-
-		newGlyph->topLeft.color = color;
-		newGlyph->topLeft.setPosition(destRect.x, destRect.y + destRect.w);
-		newGlyph->topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
-
-		newGlyph->bottomLeft.color = color;
-		newGlyph->bottomLeft.setPosition(destRect.x, destRect.y);
-		newGlyph->bottomLeft.setUV(uvRect.x, uvRect.y);
-
-		newGlyph->bottomRight.color = color;
-		newGlyph->bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
-		newGlyph->bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
-
-		newGlyph->topRight.color = color;
-		newGlyph->topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-		newGlyph->topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-		_glyphs.push_back(newGlyph);
+		_glyphs.emplace_back(destRect, uvRect, texture, depth, color);
 	}
 
 	void SpriteBatch::renderBatch()
@@ -83,28 +64,28 @@ namespace SDLEngine
 
 		int offset = 0;
 		int currVertex = 0;
-		_renderBatches.emplace_back(offset, 6, _glyphs[0]->texture);
-		vertices[currVertex++] = _glyphs[0]->topLeft;
-		vertices[currVertex++] = _glyphs[0]->bottomLeft;
-		vertices[currVertex++] = _glyphs[0]->bottomRight;
-		vertices[currVertex++] = _glyphs[0]->bottomRight;
-		vertices[currVertex++] = _glyphs[0]->topRight;
-		vertices[currVertex++] = _glyphs[0]->topLeft;
+		_renderBatches.emplace_back(offset, 6, _glyphPointers[0]->texture);
+		vertices[currVertex++] = _glyphPointers[0]->topLeft;
+		vertices[currVertex++] = _glyphPointers[0]->bottomLeft;
+		vertices[currVertex++] = _glyphPointers[0]->bottomRight;
+		vertices[currVertex++] = _glyphPointers[0]->bottomRight;
+		vertices[currVertex++] = _glyphPointers[0]->topRight;
+		vertices[currVertex++] = _glyphPointers[0]->topLeft;
 		offset += 6;
 
-		for (int currGlyph = 1; currGlyph < _glyphs.size(); currGlyph++)
+		for (int currGlyph = 1; currGlyph < _glyphPointers.size(); currGlyph++)
 		{
-			if (_glyphs[currGlyph]->texture != _glyphs[currGlyph - 1]->texture)
-				_renderBatches.emplace_back(offset, 6, _glyphs[currGlyph]->texture);
+			if (_glyphPointers[currGlyph]->texture != _glyphPointers[currGlyph - 1]->texture)
+				_renderBatches.emplace_back(offset, 6, _glyphPointers[currGlyph]->texture);
 			else
 				_renderBatches.back().numVertices += 6;
 
-			vertices[currVertex++] = _glyphs[currGlyph]->topLeft;
-			vertices[currVertex++] = _glyphs[currGlyph]->bottomLeft;
-			vertices[currVertex++] = _glyphs[currGlyph]->bottomRight;
-			vertices[currVertex++] = _glyphs[currGlyph]->bottomRight;
-			vertices[currVertex++] = _glyphs[currGlyph]->topRight;
-			vertices[currVertex++] = _glyphs[currGlyph]->topLeft;
+			vertices[currVertex++] = _glyphPointers[currGlyph]->topLeft;
+			vertices[currVertex++] = _glyphPointers[currGlyph]->bottomLeft;
+			vertices[currVertex++] = _glyphPointers[currGlyph]->bottomRight;
+			vertices[currVertex++] = _glyphPointers[currGlyph]->bottomRight;
+			vertices[currVertex++] = _glyphPointers[currGlyph]->topRight;
+			vertices[currVertex++] = _glyphPointers[currGlyph]->topLeft;
 			offset += 6;
 		}
 
@@ -151,13 +132,13 @@ namespace SDLEngine
 		switch (_sortType)
 		{
 			case GlyphSortType::FRONT_TO_BACK: 
-				std::stable_sort(_glyphs.begin(), _glyphs.end(), compareFrontToBack);
+				std::stable_sort(_glyphPointers.begin(), _glyphPointers.end(), compareFrontToBack);
 				break;
 			case GlyphSortType::BACK_TO_FRONT: 
-				std::stable_sort(_glyphs.begin(), _glyphs.end(), compareBackToFront);
+				std::stable_sort(_glyphPointers.begin(), _glyphPointers.end(), compareBackToFront);
 				break;
 			case GlyphSortType::TEXTURE: 
-				std::stable_sort(_glyphs.begin(), _glyphs.end(), compareTexture);
+				std::stable_sort(_glyphPointers.begin(), _glyphPointers.end(), compareTexture);
 				break;
 		}
 		

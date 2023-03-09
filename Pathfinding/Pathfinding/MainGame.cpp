@@ -11,7 +11,7 @@ MainGame::MainGame() :
 	_screenHeight(400),
 	_gameState(GameState::PLAY),
 	_fps(0),
-	_maxFPS(60.0f),
+	_maxFPS(120.0f),
 	_time(0)
 {
 	_camera.init(_screenWidth, _screenHeight);
