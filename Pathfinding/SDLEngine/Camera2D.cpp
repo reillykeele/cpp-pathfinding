@@ -54,6 +54,23 @@ namespace SDLEngine
 		return screenCoords;
 	}
 
+	bool Camera2D::isBoxInView(const glm::vec2& pos, const glm::vec2& dim)
+	{
+		const glm::vec2 SCALED_SCREEN_DIM = glm::vec2(_screenWidth, _screenHeight) / _scale;
+		const glm::vec2 MIN_DIST = (dim + SCALED_SCREEN_DIM) / 2.0f;
+
+		glm::vec2 centerPos = pos + dim / 2.0f;
+		auto distVec = centerPos - _position;
+
+		float xDepth = MIN_DIST.x - std::abs(distVec.x);
+		float yDepth = MIN_DIST.y - std::abs(distVec.y);
+
+		if (xDepth > 0 && yDepth > 0)
+			return true;
+
+		return false;
+	}
+
 	void Camera2D::setScale(const float newScale)
 	{
 		_scale = newScale;
