@@ -16,7 +16,7 @@ namespace SDLEngine
 
 	struct ColorRGBA8
 	{
-		ColorRGBA8() : r(0), g(0), b(0), a(0) { }
+		ColorRGBA8() : r(255), g(255), b(255), a(255) { }
 		ColorRGBA8(GLbyte r, GLbyte g, GLbyte b, GLbyte a) : r(r), g(g), b(b), a(a) { }
 
 		GLbyte r;

@@ -42,6 +42,9 @@ namespace SDLEngine
 
 	glm::vec2 Camera2D::convertScreenToWorld(glm::vec2 screenCoords) const
 	{
+		// invert y
+		screenCoords.y = _screenHeight - screenCoords.y;
+
 		// center
 		screenCoords -= glm::vec2(_screenWidth / 2, _screenHeight / 2);
 

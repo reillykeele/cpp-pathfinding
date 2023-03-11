@@ -15,7 +15,7 @@ namespace SDLEngine
 	{
 	}
 
-	int Window::create(std::string windowName, int screenWidth, int screenHeight, unsigned currFlags)
+	int Window::create(std::string windowName, int screenWidth, int screenHeight, unsigned currFlags, ColorRGBA8 clearColor)
 	{
 		Uint32 flags = SDL_WINDOW_OPENGL;
 		if (currFlags & INVISIBLE)
@@ -40,7 +40,7 @@ namespace SDLEngine
 
 		std::printf("*** OpenGL Version: %s ***\n", glGetString(GL_VERSION));
 
-		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+		glClearColor(clearColor.r / 255.0f, clearColor.g / 255.0f, clearColor.b / 255.0f, clearColor.a / 255.0f);
 
 		// Set VSYNC
 		SDL_GL_SetSwapInterval(0);

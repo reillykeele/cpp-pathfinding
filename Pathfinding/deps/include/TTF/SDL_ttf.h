@@ -36,7 +36,7 @@
 #ifndef SDL_TTF_H_
 #define SDL_TTF_H_
 
-#include <SDL/sdl.h>
+#include <SDL/SDL.h>
 #include "SDL/begin_code.h"
 
 /* Set up for C function definitions, even when using C++ */

@@ -7,6 +7,8 @@
 #include <SDLEngine/Timing.h>
 #include <SDLEngine/Window.h>
 
+#include "Grid.h"
+
 enum class GameState { PLAY, EXIT };
 
 class MainGame
@@ -20,30 +22,42 @@ public:
 private:
 	void initSystems();
 	void initShaders();
-	void gameLoop();
-	void processInput();
-	void update(const float deltaTime);
-	void drawGame();
 
-	SDLEngine::FPSLimiter _fpsLimiter;
-	SDLEngine::Window _window;
+	void gameLoop();
+
+	void processInput();
+
+	void update(const float deltaTime);
+
+	void draw();
+
+	void drawGame();
 
 	int _screenWidth;
 	int _screenHeight;
 
-	GameState _gameState;
-
-	SDLEngine::GLSLProgram _colorProgram;
-
-	SDLEngine::Camera2D _camera;
-
-	SDLEngine::SpriteBatch _spriteBatch;
-
-	SDLEngine::InputManager _inputManager;
-
 	float _fps;
 	float _maxFPS;
 
-	float _time;
+	SDLEngine::FPSLimiter _fpsLimiter;
+	SDLEngine::Window _window;
+
+	SDLEngine::GLSLProgram _colorProgram;
+
+	SDLEngine::SpriteBatch _spriteBatch;
+
+	SDLEngine::Camera2D _camera;
+	SDLEngine::InputManager _inputManager;
+
+	GameState _gameState;
+
+	// Pathfinding
+	Grid _grid;
+	std::vector<glm::ivec2> _path;
+
+	bool _isPathCalculated;
+
+	glm::ivec2 _startPos;
+	glm::ivec2 _endPos;
 };
 

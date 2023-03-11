@@ -4,6 +4,8 @@
 
 #include <SDL/SDL.h>
 
+#include "Vertex.h"
+
 namespace SDLEngine
 {
 
@@ -20,11 +22,12 @@ namespace SDLEngine
 		Window();
 		~Window();
 
-		int create(std::string windowName, int screenWidth, int screenHeight, unsigned int currFlags);
+		int create(std::string windowName, int screenWidth, int screenHeight, unsigned int currFlags, ColorRGBA8 clearColor = ColorRGBA8(255, 255, 255, 255));
 		void swap();
 
 		int getScreenWidth() const { return _screenWidth; }
 		int getScreenHeight() const { return _screenHeight; }
+
 	private:
 		SDL_Window* _sdlWindow;
 
