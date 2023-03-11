@@ -104,7 +104,7 @@ void Grid::initSpriteBatch()
 	_spriteBatch.begin();
 
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
-	SDLEngine::ColorRGBA8 color;
+	SDLEngine::ColorRGBA8 color(51, 63, 88, 255);
 
 	for (int y = 0; y < _height; y++)
 	{

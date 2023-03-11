@@ -8,14 +8,20 @@
 
 #include "Pathfinding.h"
 
+// const SDLEngine::ColorRGBA8 MainGame::BACKGROUND_COLOR = SDLEngine::ColorRGBA8(255, 246, 211, 255);
+// const SDLEngine::ColorRGBA8 MainGame::GRID_COLOR       = SDLEngine::ColorRGBA8(255, 246, 211, 255);
+// const SDLEngine::ColorRGBA8 MainGame::START_COLOR	   = SDLEngine::ColorRGBA8(235, 107, 111, 255);
+// const SDLEngine::ColorRGBA8 MainGame::END_COLOR		   = SDLEngine::ColorRGBA8(124,  63,  88, 255);
+// const SDLEngine::ColorRGBA8 MainGame::PATH_COLOR	   = SDLEngine::ColorRGBA8(249, 168, 117, 255);
+
 MainGame::MainGame() :
-	_screenWidth(600),
-	_screenHeight(400),
+	_screenWidth(640),
+	_screenHeight(480),
 	_fps(0),
 	_maxFPS(120.0f),
 	_gameState(GameState::PLAY),
 
-	_grid(18, 12),
+	_grid(20, 15),
 	_isPathCalculated(false),
 	_startPos(-1),
 	_endPos(-1)
@@ -42,6 +48,7 @@ void MainGame::initSystems()
 	SDLEngine::init();
 
 	_window.create("Pathfinding", _screenWidth, _screenHeight, 0);
+	_window.setClearColor(41, 40, 49, 255);
 
 	initShaders();
 
@@ -240,7 +247,7 @@ void MainGame::drawGame()
 	auto texture = SDLEngine::ResourceManager::getTexture("Textures/64-square-to.png");
 
 	// draw path
-	SDLEngine::ColorRGBA8 pathColor(255, 0, 0, 255);
+	SDLEngine::ColorRGBA8 pathColor(74, 122, 150, 255);
 	for (auto p : _path)
 	{
 		glm::vec4 destRect(p.x * _grid.TILE_SIZE, p.y * _grid.TILE_SIZE, _grid.TILE_SIZE, _grid.TILE_SIZE);
@@ -250,15 +257,15 @@ void MainGame::drawGame()
 	// draw start point
 	if (_startPos != Grid::INVALID)
 	{
-		SDLEngine::ColorRGBA8 startColor(0, 0, 255, 255);
+		SDLEngine::ColorRGBA8 startColor(238, 134, 149, 255);
 		glm::vec4 startDestRect(_startPos.x * _grid.TILE_SIZE, _startPos.y * _grid.TILE_SIZE, _grid.TILE_SIZE, _grid.TILE_SIZE);
 		_spriteBatch.draw(startDestRect, uvRect, texture.id, 0.0f, startColor);
 	}
 
-	// draw start point
+	// draw end point
 	if (_endPos != Grid::INVALID)
 	{
-		SDLEngine::ColorRGBA8 endColor(0, 255, 0, 255);
+		SDLEngine::ColorRGBA8 endColor(137, 238, 134, 255);
 		glm::vec4 endDestRect(_endPos.x * _grid.TILE_SIZE, _endPos.y * _grid.TILE_SIZE, _grid.TILE_SIZE, _grid.TILE_SIZE);
 		_spriteBatch.draw(endDestRect, uvRect, texture.id, 0.0f, endColor);
 	}

@@ -59,5 +59,11 @@ private:
 
 	glm::ivec2 _startPos;
 	glm::ivec2 _endPos;
+
+	// static const SDLEngine::ColorRGBA8 BACKGROUND_COLOR;
+	// static const SDLEngine::ColorRGBA8 GRID_COLOR;
+	// static const SDLEngine::ColorRGBA8 START_COLOR;
+	// static const SDLEngine::ColorRGBA8 END_COLOR;
+	// static const SDLEngine::ColorRGBA8 PATH_COLOR;
 };
 

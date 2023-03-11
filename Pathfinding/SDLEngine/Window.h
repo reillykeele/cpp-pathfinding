@@ -22,17 +22,24 @@ namespace SDLEngine
 		Window();
 		~Window();
 
-		int create(std::string windowName, int screenWidth, int screenHeight, unsigned int currFlags, ColorRGBA8 clearColor = ColorRGBA8(255, 255, 255, 255));
+		int create(std::string windowName, int screenWidth, int screenHeight, unsigned int currFlags);
 		void swap();
 
 		int getScreenWidth() const { return _screenWidth; }
 		int getScreenHeight() const { return _screenHeight; }
+
+		void setClearColor(int r, int g, int b, int a);
 
 	private:
 		SDL_Window* _sdlWindow;
 
 		int _screenWidth;
 		int _screenHeight;
+
+		GLclampf _r;
+		GLclampf _g;
+		GLclampf _b;
+		GLclampf _a;
 	};
 
 }
