@@ -8,12 +8,6 @@
 
 #include "Pathfinding.h"
 
-// const SDLEngine::ColorRGBA8 MainGame::BACKGROUND_COLOR = SDLEngine::ColorRGBA8(255, 246, 211, 255);
-// const SDLEngine::ColorRGBA8 MainGame::GRID_COLOR       = SDLEngine::ColorRGBA8(255, 246, 211, 255);
-// const SDLEngine::ColorRGBA8 MainGame::START_COLOR	   = SDLEngine::ColorRGBA8(235, 107, 111, 255);
-// const SDLEngine::ColorRGBA8 MainGame::END_COLOR		   = SDLEngine::ColorRGBA8(124,  63,  88, 255);
-// const SDLEngine::ColorRGBA8 MainGame::PATH_COLOR	   = SDLEngine::ColorRGBA8(249, 168, 117, 255);
-
 MainGame::MainGame() :
 	_screenWidth(640),
 	_screenHeight(480),
@@ -127,61 +121,67 @@ void MainGame::processInput()
 	{
 		switch (ev.type)
 		{
-		case SDL_QUIT:
-			_gameState = GameState::EXIT;
-			break;
+			case SDL_QUIT:
+				_gameState = GameState::EXIT;
+				break;
 
-		case SDL_KEYDOWN:
-			_inputManager.pressKey(ev.key.keysym.sym);
-			break;
-		case SDL_KEYUP:
-			_inputManager.releaseKey(ev.key.keysym.sym);
-			break;
+			case SDL_KEYDOWN:
+				_inputManager.pressKey(ev.key.keysym.sym);
+				break;
+			case SDL_KEYUP:
+				_inputManager.releaseKey(ev.key.keysym.sym);
+				break;
 
-		case SDL_MOUSEMOTION:
-			_inputManager.setMouseCoords(ev.motion.x, ev.motion.y);
-		case SDL_MOUSEBUTTONDOWN:
-			_inputManager.pressKey(ev.button.button);
-			break;
-		case SDL_MOUSEBUTTONUP:
-			_inputManager.releaseKey(ev.button.button);
-			break;
+			case SDL_MOUSEMOTION:
+				_inputManager.setMouseCoords(ev.motion.x, ev.motion.y);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				_inputManager.pressKey(ev.button.button);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				_inputManager.releaseKey(ev.button.button);
+				break;
 		}
 	}
 }
 
 void MainGame::update(const float deltaTime)
 {
-	// static const float CAMERA_SPEED = 2.0f;
-	// static const float SCALE_SPEED = 0.1f;
-	//
-	// if (_inputManager.isKeyDown(SDLK_w))
-	// 	_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED * deltaTime));
-	//
-	// if (_inputManager.isKeyDown(SDLK_s))
-	// 	_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED * deltaTime));
-	//
-	// if (_inputManager.isKeyDown(SDLK_d))
-	// 	_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED * deltaTime, 0.0f));
-	//
-	// if (_inputManager.isKeyDown(SDLK_a))
-	// 	_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED * deltaTime, 0.0f));
-	//
-	// if (_inputManager.isKeyDown(SDLK_e))
-	// 	_camera.setScale(_camera.getScale() + SCALE_SPEED * deltaTime);
-	//
-	// if (_inputManager.isKeyDown(SDLK_q))
-	// 	_camera.setScale(std::max(_camera.getScale() - SCALE_SPEED * deltaTime, 0.01f));
+	if (_inputManager.isKeyPressed(SDLK_SPACE))
+	{
+		auto mouseCoords = _inputManager.getMouseCoords();
+		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+
+		auto gridPos = _grid.convertWorldToGrid(mouseCoords);
+		if (gridPos != Grid::INVALID)
+		{
+			// Toggle the grid's walkability at gridPos
+			bool isWalkable = _grid.isWalkable(gridPos);
+			_grid.setWalkable(gridPos, !isWalkable);
+
+			_isPathCalculated = false;
+		}
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_m))
+	{
+		if (_grid.getMovementType() == FOUR_DIRECTIONAL)
+			_grid.setMovementType(EIGHT_DIRECTIONAL);
+		else if (_grid.getMovementType() == EIGHT_DIRECTIONAL)
+			_grid.setMovementType(FOUR_DIRECTIONAL);
+
+		_isPathCalculated = false;
+	}
 
 	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
 		auto mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
 
 		auto gridPos = _grid.convertWorldToGrid(mouseCoords);
 		if (gridPos != Grid::INVALID)
 		{
+			// Set the path's start position
 			_startPos = gridPos;
 			_isPathCalculated = false;
 		}
@@ -191,11 +191,11 @@ void MainGame::update(const float deltaTime)
 	{
 		auto mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
 
 		auto gridPos = _grid.convertWorldToGrid(mouseCoords);
 		if (gridPos != Grid::INVALID)
 		{
+			// Set the path's end position
 			_endPos = gridPos;
 			_isPathCalculated = false;
 		}
