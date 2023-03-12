@@ -99,6 +99,17 @@ GridCell& Grid::get(glm::ivec2 pos)
 	return _map[pos.y][pos.x];
 }
 
+void Grid::clear()
+{
+	_movementType = EIGHT_DIRECTIONAL;
+
+	for (int y = 0; y < _map.size(); y++)
+		for (int x = 0; x < _map[y].size(); x++)
+			_map[y][x].isWalkable = true;
+
+	_shouldRedraw = true;
+}
+
 void Grid::setWalkable(glm::ivec2 pos, bool isWalkable)
 {
 	GridCell& cell = get(pos);

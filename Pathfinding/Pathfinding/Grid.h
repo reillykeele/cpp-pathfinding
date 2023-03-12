@@ -34,6 +34,8 @@ public:
 
 	GridCell& get(glm::ivec2 pos);
 
+	void clear();
+
 	void setWalkable(glm::ivec2 pos, bool isWalkable);
 
 	double getCost(const glm::ivec2 a, const glm::ivec2 b) const;

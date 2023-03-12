@@ -69,6 +69,16 @@ void MainGame::gameLoop()
 
 	float prevTicks = SDL_GetTicks64();
 
+	std::cout << std::endl;
+	std::cout << "======================" << std::endl;
+	std::cout << "     INSTRUCTIONS     " << std::endl;
+	std::cout << "======================" << std::endl;
+	std::cout << " > left-click to place the agent." << std::endl;
+	std::cout << " > right-click to place the target." << std::endl;
+	std::cout << " > space bar to place walls." << std::endl;
+	std::cout << " > M to toggle between 4 and 8 directional movement." << std::endl;
+	std::cout << " > C to clear the screen." << std::endl;
+
 	while(_gameState != GameState::EXIT)
 	{
 		_fpsLimiter.begin();
@@ -147,6 +157,26 @@ void MainGame::processInput()
 
 void MainGame::update(const float deltaTime)
 {
+	if (_inputManager.isKeyPressed(SDLK_c))
+	{
+		_startPos = Grid::INVALID;
+		_endPos = Grid::INVALID;
+		_path.clear();
+		_grid.clear();
+
+		_isPathCalculated = false;
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_m))
+	{
+		if (_grid.getMovementType() == FOUR_DIRECTIONAL)
+			_grid.setMovementType(EIGHT_DIRECTIONAL);
+		else if (_grid.getMovementType() == EIGHT_DIRECTIONAL)
+			_grid.setMovementType(FOUR_DIRECTIONAL);
+
+		_isPathCalculated = false;
+	}
+
 	if (_inputManager.isKeyPressed(SDLK_SPACE))
 	{
 		auto mouseCoords = _inputManager.getMouseCoords();
@@ -161,16 +191,6 @@ void MainGame::update(const float deltaTime)
 
 			_isPathCalculated = false;
 		}
-	}
-
-	if (_inputManager.isKeyPressed(SDLK_m))
-	{
-		if (_grid.getMovementType() == FOUR_DIRECTIONAL)
-			_grid.setMovementType(EIGHT_DIRECTIONAL);
-		else if (_grid.getMovementType() == EIGHT_DIRECTIONAL)
-			_grid.setMovementType(FOUR_DIRECTIONAL);
-
-		_isPathCalculated = false;
 	}
 
 	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
